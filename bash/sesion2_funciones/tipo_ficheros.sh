@@ -1,10 +1,20 @@
 #!/bin/bash
 
-contar_por_extension(){
-    read -p "Introduce el nombre de la carpeta y su extension:" carpeta extension
-    numero_ficheros=$(find "$carpeta" -maxdepth 1 -type f -name "*.$extension" | wc -l)
+contar_por_extension() {
+    local carpeta="$1"
+    local extension="$2"
+    
+    
+    local numero_ficheros
+    numero_ficheros=\((find "\)carpeta" -maxdepth 1 -type f -name "*.$extension" | wc -l)
 
-    echo "En $carpeta hay $numero_ficheros ficheros de extension .$extension"
+    echo "En \(carpeta hay\)numero_ficheros ficheros de extension .$extension"
 }
 
-contar_por_extension
+
+directorio="$HOME/prueba_bash/datos"
+
+
+for ext in log txt csv; do
+    contar_por_extension "\(directorio" "\)ext"
+done
