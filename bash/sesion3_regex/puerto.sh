@@ -1,12 +1,21 @@
 #!/bin/bash
 
-pedir_puerto_valido() {
-  while true; do
-    read -p "Introduce un puerto TCP (1-65535): " puerto
-    [[ \(puerto =~ ^[0-9]+\) ]] && (( puerto >= 1 && puerto <= 65535 )) && break
-  done
-}
+re='^[0-9][0-9]*$'
 
-pedir_puerto_valido
+if [ $# -eq 0 ];
+  then 
+      echo "No se ha introducido ningun parametro."
+      exit 1
+fi
 
-echo "El puerto introducido es: $puerto"
+      if [[ $# =~ $re ]];
+        then
+          if [ $# -ge 1 ] && [ $# -le 65535 ];
+            then
+              echo $1 "Esta dentro del rango (1-65535)"
+            else
+              echo $1 "Está fuera del rango (1-65535)"
+          fi
+        else
+          echo "No es un parametro valido"
+      fi
