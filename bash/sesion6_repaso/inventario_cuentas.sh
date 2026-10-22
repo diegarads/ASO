@@ -1,6 +1,6 @@
 #!/bin/bash
 
-regex='^/([a-z]+/)*[a-z]+$'
+regex='^(/[a-z]+)+$'
 
 if [ $# -eq 0 ]; then
     shell_introducida="/bin/bash"
