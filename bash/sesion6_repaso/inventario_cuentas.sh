@@ -18,7 +18,7 @@ cuentas_mas_1000=0
 
 while IFS=':' read -r usuario password uid gid descripcion home user_shell; do
     if [[ $user_shell == "$shell_introducida" ]]; then
-        echo "${usuario}:${uid}:${home}:${user_shell}"
+        echo "$usuario:$uid:$home:$user_shell"
 
         ((total_cuentas++))
 
