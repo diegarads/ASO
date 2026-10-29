@@ -1,5 +1,3 @@
-#!/bin/bash
-
 mostrarMenu() {
 
     echo "===== GESTIÓN DE PROCESOS ====="
@@ -12,9 +10,30 @@ mostrarMenu() {
 
 }
 
+validar_pid() {
+    local pid="$1"
+    if [[ "$pid" =~ ^[0-9]+$ ]] && ps -p "$pid" > /dev/null 2>&1; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+registrar() {
+
+    accion="$1"
+    pid="$2"
+
+    cmd=$(ps -p "$pid" -o comm= 2>/dev/null)
+
+    formato_fecha="date '+%Y-%m-%d %H:%M:%S'"
+
+    echo $formato_fecha - $accion - $pid - $cmd >> ~/gestion_procesos.log
+}
+
 listar_usuario() {
     read -p "Introduce el usuario: " usuario
-    if id "$usuario" > /dev/null 2>&1; then
+    if id "$usuario" ; then
         ps -u "$usuario"
     else
         echo "El usuario no existe."
@@ -37,7 +56,7 @@ top_cpu() {
 cambiar_prioridad() {
     read -p "Introduce el PID: " pid
 
-    if ! ps -p "$pid" > /dev/null 2>&1; then
+    if ! validar_pid "$pid"; then
         echo "El PID no existe."
         return
     fi
@@ -64,21 +83,28 @@ cambiar_prioridad() {
         fi
     fi
 
+    registrar "Cambio de prioridad" "$pid"
     renice "$nice_val" "$pid"
 }
 
 finalizar_proceso() {
     read -p "Introduce el PID: " pid
 
+    if ! validar_pid "$pid"; then
+        echo "El PID no existe."
+        return
+    fi
+
     read -p "¿Quieres finalizar el proceso $pid? (s/n): " conf
 
     if [ "$conf" = "s" ]; then
-        kill -SIGTERM "$pid"
+        registrar "Proceso finalizado" "$pid"
+        kill -15 "$pid"
         
         sleep 3
 
         if ps -p "$pid" > /dev/null 2>&1; then
-            kill -SIGKILL "$pid"
+            kill -9 "$pid"
         fi
     fi
 }
