@@ -11,7 +11,7 @@ mostrarMenu() {
 }
 
 validar_pid() {
-    local pid="$1"
+    pid="$1"
     if [[ "$pid" =~ ^[0-9]+$ ]] && ps -p "$pid" > /dev/null 2>&1; then
         return 0
     else
